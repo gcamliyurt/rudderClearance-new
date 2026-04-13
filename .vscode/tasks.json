@@ -1,0 +1,11 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "regenerate-figures",
+			"type": "shell",
+			"command": "\"/Users/gokhancamliyurt/Desktop/1. posDoc/6.2 rudderClearance/.venv/bin/python\" code/generate_draft_figures.py",
+			"isBackground": false
+		}
+	]
+}

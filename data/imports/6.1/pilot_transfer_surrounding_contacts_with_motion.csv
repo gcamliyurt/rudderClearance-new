@@ -1,0 +1,1 @@
+timestamp,traffic_direction,own_mmsi,pilot_mmsi,own_lat,own_lon,own_sog,own_cog,target_mmsi,target_lat,target_lon,target_distance_m,target_distance_nm,rel_bearing_deg,target_vessel_type,target_dt_s,target_step_dist_m,target_sog_kt,target_cog_deg

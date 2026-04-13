@@ -1,0 +1,362 @@
+\documentclass[preprint,12pt]{elsarticle}
+
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{siunitx}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{float}
+\graphicspath{{figures/}}
+
+\journal{Transportation Research Part E: Logistics and Transportation Review}
+
+\begin{document}
+\begin{frontmatter}
+
+\title{Defining a CW-MOB Initial-Action Envelope: Stern-Clearance Time and Heading Change for Pilot Man-Overboard Protection}
+
+\author[inst1]{Author Name}
+\author[inst1]{Co-author Name}
+\address[inst1]{Affiliation, City, Country}
+
+\begin{abstract}
+Pilot man-overboard (MOB) events during transfer operations require immediate action. Unlike standard recovery-turn practice, the first objective is rapid stern-propeller risk separation. Existing guidance is largely qualitative and does not specify how long hard rudder should be maintained in this initial phase. This study proposes a stern-clearance model that defines a crew-witnessed MOB (CW-MOB) initial-action envelope before full emergency-turn reconstruction. Stern-clearance time, $\tau_{\mathrm{clear}}$, is defined as the first outward crossing of a moving propeller-hazard envelope, with heading at clearance $\psi_{\mathrm{clear}}$. The model combines first-order yaw response, bridge-response delay, rudder-actuation ramp, vessel geometry, and a draft-ratio loading proxy. In the executable baseline, no maneuver-plan record matches eligible events; therefore, a documented $35^{\circ}$ hard-over fallback is applied, with rudder travel based on the IMO steering-gear benchmark proxy. Wind and wave forcing are active for most eligible events through the metocean bridge, while current remains unavailable. A total of 5{,}302 eligible scenarios are simulated. Outcomes are 2{,}010 maneuver-effective no-entry cases (37.91\%), 3{,}260 clearance-after-entry cases (61.49\%), and 32 no-clearance-within-window cases (0.60\%). For clearance-after-entry cases, $\tau_{\mathrm{clear}}$ benchmarks are $P10=16.4$ s, $P50=63.1$ s, $P90=133.2$ s, and $P95=144.8$ s; corresponding heading changes are $P50=6.9835^{\circ}$ and $P90=16.7785^{\circ}$. The contribution is the first quantified CW-MOB initial-action envelope in paired trigger variables $(\tau_{\mathrm{clear}},\psi_{\mathrm{clear}})$ for operational decision support.
+\end{abstract}
+
+\begin{keyword}
+Man overboard \sep Crew-witnessed MOB \sep Stern-clearance time \sep Ship maneuvering \sep Decision support
+\end{keyword}
+
+\end{frontmatter}
+
+\section{Introduction}
+Pilot transfer is a high-risk operation in constrained approaches. In a pilot MOB case, the first tactical objective is immediate stern-propeller separation, not full recovery-turn completion. However, bridge practice still relies on qualitative commands (e.g., hard-over toward casualty side), with limited quantitative guidance on required hard-rudder duration.
+
+This study formulates immediate protection as a time-to-clearance problem and estimates operational thresholds for the first CW-MOB action phase after detection. Here, CW-MOB denotes a crew-witnessed MOB that demands immediate bridge action. The objective is not to reconstruct the full emergency turn. Instead, the paper isolates initial protection quantities that can be used as trigger thresholds. The framework explicitly represents bridge-response delay, rudder-travel time, vessel maneuvering response, and stern-hazard geometry, while retaining environmental forcing when compatible metocean magnitudes are available.
+
+\subsection*{Contributions}
+\begin{itemize}
+    \item A physically interpretable first-phase MOB protection metric, $\tau_{\mathrm{clear}}$.
+    \item A paired trigger variable set for CW-MOB initiation: clearance time $\tau_{\mathrm{clear}}$ and heading change $\psi_{\mathrm{clear}}$.
+    \item A data-feasible model combining maneuvering, response-chain timing, and explicit fallback handling when event-specific maneuver or metocean inputs are unavailable.
+    \item Percentile-based guidance stratified by ship class, LOA bin, and fall side.
+\end{itemize}
+
+\section{Literature review}
+\subsection{MOB doctrine and first-phase decision gap}
+Classical MOB procedures emphasize recovery geometry, track reversal, and retrieval completion. In pilot-transfer cases, bridge action is needed before any full recovery pattern can be established. The near-term objective is rapid separation between the casualty and the stern-propeller danger region. The regulatory baseline (SOLAS and IAMSAR) requires immediate MOB action, but does not provide event-wise quantitative hold-time thresholds for initial hard-over protection \cite{ref_solas,ref_iamsar}. Recent pilot-transfer accident evidence confirms that this phase is highly time-critical under coupled environmental, boarding, and organizational pressures \cite{ref_pilot_transfer_accidents}. Existing doctrine gives practical commands, but rarely quantifies the duration of initial hard-rudder action or the heading change needed for first-phase protection.
+
+\subsection{Low-order maneuvering models in operational settings}
+Low-order maneuvering models remain operationally useful when vessel-specific hydrodynamic derivatives, trial curves, or high-fidelity simulation inputs are unavailable. Recent reviews show that maritime decision support now spans physical, reduced-order, data-driven, and hybrid approaches, with growing emphasis on short-horizon safety prediction \cite{ref_ship_motion_review,ref_ship_motion_review2}. For event-wise operational analysis, first-order yaw-response formulations are attractive because they maintain physical interpretability while enabling large-sample scenario evaluation; the standard Nomoto-type interpretation is well established in marine craft motion-control literature \cite{ref_fossen}. Their limitations are established, particularly for nonlinear rudder effects, propulsion transients, and shallow-water interactions. Even so, for early protection questions posed as short-time envelope estimation, reduced-order dynamics remain an appropriate and reproducible baseline.
+
+\subsection{AIS-based safety analytics}
+AIS-based safety analysis is now central to encounter-risk assessment, traffic-exposure quantification, port-approach analysis, and transfer monitoring. Recent reviews show extensive use of AIS trajectories for anomaly detection, behavior interpretation, and decision-support feature extraction \cite{ref_ais_review}. In pilotage research, AIS data are valuable for reconstructing the operational context of low-frequency, high-consequence events. However, most AIS studies remain descriptive at the traffic-pattern level. Fewer studies derive explicit first-response maneuver thresholds, and translation to stern-hazard time-to-clearance metrics remains limited.
+
+\subsection{Gap positioning}
+Taken together, the maritime literature indicates three unresolved needs: (i) no standardized quantitative threshold for immediate stern-clearance protection in pilot-transfer MOB cases; (ii) limited explicit modeling of the bridge-response chain and rudder actuation delay that govern the earliest event seconds; and (iii) lack of percentile guidance stratified by vessel class, size, and transfer side.
+
+Cross-disciplinary transport research reinforces this framing. In aviation, recent findings show that pilot response to cockpit alerts is variable, context-dependent, and tightly linked to warning-system design \cite{ref_aviation_alerts,ref_aviation_hud}. Aviation control studies further formalize safety as envelope protection, i.e., maintaining operation within a dynamic safe region rather than reacting only after severe state deviation \cite{ref_aviation_envelope}. In land transportation, emergency-braking and collision-avoidance research similarly uses short-horizon trigger variables such as time-to-collision, detection timing, and braking onset \cite{ref_land_aeb,ref_land_detection}. These domains do not transfer directly to maritime MOB mechanics, but they provide convergent methodological support for modeling the first action as an envelope-and-trigger problem prior to full maneuver optimization.
+
+The present study addresses these gaps by isolating the first emergency action phase and expressing it through the paired CW-MOB trigger variables $\tau_{\mathrm{clear}}$ and $\psi_{\mathrm{clear}}$.
+
+\section{Methodology}
+Figure~\ref{fig:research_flow} outlines the five-step workflow adopted in this study, from problem framing and variable design through event-wise scenario construction, batch simulation, and percentile guidance derivation. The subsections below detail each step.
+
+\begin{figure}[H]
+    \centering
+    \fbox{\parbox{0.92\textwidth}{\textbf{FIGURE PLACEHOLDER 1}\\Source file: Figure_1_research_flow.png\\Image suppressed for plain-text review copy.}}
+    \caption{Overall methodology workflow: five sequential steps from problem framing to percentile guidance.}
+    \label{fig:research_flow}
+\end{figure}
+
+\subsection{Nomenclature}
+Table~\ref{tab:nomenclature} defines the core symbols used throughout the paper. All timing variables carry units of seconds; angular variables are reported in degrees in all results tables and figures.
+\begin{table}[H]
+\centering
+\fbox{\parbox{0.92\textwidth}{\textbf{TABLE PLACEHOLDER 1}\\Tabular content suppressed for plain-text review copy.}}\
+\caption{Core symbols and units.}
+\label{tab:nomenclature}
+\end{table}
+
+\subsection{Clearance definition}
+The primary output variable is the stern-clearance time, defined as the first instant at which the casualty exits the propeller-hazard zone after having entered it:
+\begin{equation}
+\tau_{\mathrm{clear}} = \inf\left\{t>0:\ \|\mathbf{r}_c(t)-\mathbf{r}_p(t)\|\ge R_h\right\},
+\end{equation}
+where $\mathbf{r}_c(t)$ is the position of the casualty in the ship-fixed frame, $\mathbf{r}_p(t)$ is the position of the propeller centre as the stern swings, and $R_h$ is the effective hazard radius around the propeller. The condition $\|\mathbf{r}_c-\mathbf{r}_p\|\ge R_h$ is evaluated only after a prior entry ($\|\mathbf{r}_c-\mathbf{r}_p\|<R_h$), making $\tau_{\mathrm{clear}}$ the first outward crossing. This inf-type formulation is analogous to time-to-collision and envelope-exit metrics used in adjacent safety domains \cite{ref_land_aeb,ref_aviation_envelope}.
+
+\subsection{Response-chain timing}
+The ship-response clock is decomposed into a bridge-response block and a rudder-actuation block. The bridge-response delay is written as
+\begin{equation}
+t_{\mathrm{bridge}} = t_{\mathrm{detect/report}} + t_{\mathrm{master\ decision}} + t_{\mathrm{order}} + t_{\mathrm{helmsman}},
+\end{equation}
+and the total ship-response lag becomes
+\begin{equation}
+t_{\mathrm{ship\ response}} = t_{\mathrm{bridge}} + t_{\mathrm{rudder}}.
+\end{equation}
+This decomposition follows the same perception--decision--actuation logic used in adjacent transportation response studies, including cockpit alert handling and road-driver emergency response \cite{ref_aviation_alerts,ref_land_detection,ref_land_aeb}. In the present baseline, $t_{\mathrm{bridge}}=4.5$~s is adopted as a fixed high-readiness assumption, representing a best-case scenario where all bridge personnel are alert and the command chain executes without hesitation; this value is consistent with short-notice emergency response benchmarks in maritime bridge operations \cite{ref_solas,ref_iamsar}. The rudder travel time $t_{\mathrm{rudder}}\approx 15.08$~s is derived from the IMO steering-gear benchmark proxy (midship to $35^{\circ}$ at the prescribed maximum rate of $2.3^{\circ}$/s under SOLAS Chapter II-1) \cite{ref_solas}.
+
+The casualty-exposure clock is not prescribed as a separate fixed delay. Instead, time to hazard entry emerges from the relative motion between casualty and moving stern hazard. For reference, an entry time can be written as
+\begin{equation}
+\tau_{\mathrm{entry}} = \inf\left\{t>0:\ \|\mathbf{r}_c(t)-\mathbf{r}_p(t)\| < R_h\right\},
+\end{equation}
+which makes clear that pilot fall-to-hazard timing is determined by initial position, ship speed, environmental drift, and stern swing, rather than by a separate scalar assumption.
+
+\subsection{Yaw and rudder dynamics}
+Yaw response follows the first-order Nomoto model \cite{ref_fossen}:
+\begin{align}
+\dot{\psi}(t) &= r(t),\\
+\dot{r}(t) &= \frac{K\,\delta_{\mathrm{eff}}(t)-r(t)}{T_r}.
+\end{align}
+Here $K$ is the steering gain, reflecting how effectively a unit rudder angle translates into yaw-rate response (higher $K$ means a more agile vessel), and $T_r$ is the yaw time constant, reflecting the lag before the vessel attains the steady-state yaw rate (higher $T_r$ means a sluggish response). The model is the simplest physically interpretable representation of ship course-changing dynamics and is appropriate for the short-horizon enveloping problem studied here; nonlinear rudder saturation and shallow-water corrections are outside the scope of this baseline.
+
+The effective rudder angle $\delta_{\mathrm{eff}}(t)$ is modelled as a three-phase ramp to represent the mechanical delay and finite travel rate of the helm actuation system:
+\begin{equation}
+\delta_{\mathrm{eff}}(t)=
+\begin{cases}
+0, & t\le t_{\mathrm{response}},\\
+\delta\dfrac{t-t_{\mathrm{response}}}{t_{\mathrm{rudder}}}, & t_{\mathrm{response}}<t<t_{\mathrm{response}}+t_{\mathrm{rudder}},\\
+\delta, & t\ge t_{\mathrm{response}}+t_{\mathrm{rudder}}.
+\end{cases}
+\end{equation}
+The first branch (zero rudder) spans the bridge-response delay; the second branch models a linear ramp from midship to hard-over, approximating constant-rate helm travel consistent with the IMO steering-gear requirement \cite{ref_solas}; the third branch holds the commanded hard-over angle constant once full deflection is reached.
+
+\subsection{Geometry and drift}
+As the vessel turns through heading angle $\psi(t)$, the propeller centre traces an arc in the ship-fixed frame. Its coordinates relative to the initial midship origin are:
+\begin{align}
+ x_p(t) &= -x_s + l_s\left(1-\cos\psi(t)\right),\\
+ y_p(t) &= -l_s\sin\psi(t),
+\end{align}
+where $l_s$ is the longitudinal distance from the vessel's pivot point to the propeller centre, and $x_s$ is the longitudinal distance from midship to the pivot point. The cosine term captures the forward retraction of the stern as the ship turns, and the sine term captures the lateral sweep of the propeller. Together these define the moving hazard centre $\mathbf{r}_p(t)=(x_p(t),\,y_p(t))$.
+
+The casualty is modelled as a point drifting at constant velocity in the ship-fixed frame:
+\begin{equation}
+\mathbf{r}_c(t)=\mathbf{r}_c(0)+\begin{bmatrix}u_c\\v_c\end{bmatrix}t,
+\end{equation}
+where $u_c$ and $v_c$ are the net surge and sway velocity components of the casualty relative to the ship, combining the ship's forward speed, environmental drift (projected wind, wave, and current forcing), and the initial transfer-board momentum. The constant-drift assumption is appropriate for the short time horizons examined ($t_{\max}=180$~s) and is consistent with short-horizon drift models used in search-and-rescue trajectory prediction. The ship-fixed frame is defined as $x$ forward and $y$ starboard, with the casualty's initial coordinates referenced to the transfer point.
+
+\subsection{Loading-state proxy}
+When sea-trial derivatives are unavailable, the loading condition is approximated by the draft ratio $\lambda_d=\mathrm{draft}/\mathrm{LOA}$. Loaded vessels are generally less manoeuvrable (lower $K$, higher $T_r$) than vessels in ballast, consistent with physical expectations and documented in standard maneuvering references \cite{ref_fossen}. Three loading bands are applied with scalar multipliers:
+\begin{itemize}
+    \item ballast-like ($\lambda_d$ low): $K\times1.10$, $T_r\times0.85$ --- more responsive;
+    \item mid-load: $K\times1.00$, $T_r\times1.00$ --- nominal;
+    \item loaded-like ($\lambda_d$ high): $K\times0.90$, $T_r\times1.15$ --- less responsive.
+\end{itemize}
+
+\subsection{Data inputs and baseline assumptions}
+Table~\ref{tab:data_mapping} maps each data source to its role in the baseline run, covering four categories: the event table, the maneuver-plan record, metocean-attached fields, and the scenario builder.
+
+\begin{table}[H]
+\centering
+\fbox{\parbox{0.92\textwidth}{\textbf{TABLE PLACEHOLDER 2}\\Tabular content suppressed for plain-text review copy.}}\
+\caption{Executable inputs and variable mapping for the baseline run.}
+\label{tab:data_mapping}
+\end{table}
+
+Table~\ref{tab:baseline_assumptions} documents the scalar assumptions applied when event-level inputs are absent or unmatched. Key fixed values are the bridge-response delay ($t_{\mathrm{bridge}}=4.5$~s, high-readiness assumption) and the rudder travel time ($t_{\mathrm{rudder}}\approx15.08$~s from the IMO steering-gear benchmark proxy). Two additional delay cases ($t_{\mathrm{bridge}}+10$~s and $t_{\mathrm{bridge}}+30$~s) are examined in the one-at-a-time sensitivity analysis to bound the sensitivity of results to this fixed assumption.
+
+\begin{table}[H]
+\centering
+\fbox{\parbox{0.92\textwidth}{\textbf{TABLE PLACEHOLDER 3}\\Tabular content suppressed for plain-text review copy.}}\
+\caption{Baseline assumptions used in the current implementation.}
+\label{tab:baseline_assumptions}
+\end{table}
+
+In this baseline, $R_h\approx2.5D_p$ is treated as a conservative engineering envelope parameter (not a regulatory threshold), and its influence is evaluated in the one-at-a-time sensitivity analysis.
+
+\subsection{Model coverage checklist}
+Figure~\ref{fig:algorithm_pipeline} presents the full decision-gated algorithm flow from MOB event initialisation through eligibility filtering, response-chain timing, rudder actuation, yaw dynamics, and outward-crossing evaluation. Left branches represent BAN or unresolved outcomes; right branches represent ALLOW outcomes.
+
+\begin{figure}[H]
+    \centering
+    \fbox{\parbox{0.92\textwidth}{\textbf{FIGURE PLACEHOLDER 2}\\Source file: Figure_2_algorithm_pipeline.png\\Image suppressed for plain-text review copy.}}
+    \caption{Decision-gated algorithm flow for CW-MOB stern-clearance computation. Each gate determines a BAN (left) or ALLOW (right) path based on detection, response timing, and the outward-crossing condition. The sequence covers eligibility filtering, response-chain timing, rudder actuation, yaw dynamics, and hazard-crossing evaluation.}
+    \label{fig:algorithm_pipeline}
+\end{figure}
+
+Figure~\ref{fig:model_architecture} decomposes the same logic into four interacting model blocks---maneuvering, geometry, environment, and hazard/crossing---with arrows indicating information flow toward the output variables $\tau_{\mathrm{clear}}$ and $\psi_{\mathrm{clear}}$.
+
+\begin{figure}[H]
+    \centering
+    \fbox{\parbox{0.92\textwidth}{\textbf{FIGURE PLACEHOLDER 3}\\Source file: Figure_3_model_architecture.png\\Image suppressed for plain-text review copy.}}
+    \caption{Model architecture: four interacting calculation blocks (maneuvering, geometry, environment, and hazard/crossing) with information flow directed toward the output trigger variables $\tau_{\mathrm{clear}
+    \label{fig:model_architecture}
+\end{figure}
+
+Table~\ref{tab:model_coverage_checklist} provides a row-by-row traceability mapping between the algorithm pipeline and the implemented calculation blocks, indicating inclusion status and flagging items planned for future extension.
+
+\begin{table}[H]
+\centering
+\fbox{\parbox{0.92\textwidth}{\textbf{TABLE PLACEHOLDER 4}\\Tabular content suppressed for plain-text review copy.}}\
+\caption{Figure-to-algorithm coverage checklist for MOB stern-clearance computation}
+\label{tab:model_coverage_checklist}
+\end{table}
+
+\section{Results and discussion}
+The executable analysis retains operationally eligible cases labeled \texttt{ALLOW\_WITH\_EMERGENCY\_PLAN}. This yields 5{,}302 scenarios, of which 5{,}270 return solved outcomes. In the current run, no maneuver-plan timestamp matches eligible events; therefore, all events apply the documented $35^{\circ}$ hard-over fallback. Baseline bridge-response delay is fixed at 4.5 s for all events (high-readiness assumption), while rudder travel uses an IMO steering-gear benchmark proxy of about 15.08 s from midship to $35^{\circ}$. Environmental forcing is partially active: wind and wave fields are attached for most eligible events, while current remains unavailable in the executable baseline.
+
+\subsection{Outcome classes and event disposition}
+The solved set is divided into explicit physical outcome classes. Of 5{,}302 events, 2{,}010 (37.91\%) are \emph{maneuver effective -- no hazard entry} (\texttt{never\_entered}), 3{,}260 (61.49\%) are \emph{clearance after entry} (\texttt{cleared\_after\_entry}), and 32 (0.60\%) are \emph{entered but not cleared within simulation horizon} (\texttt{entered\_no\_clear}). The no-entry class is a successful protection outcome and is not treated as missing data.
+The 32 no-clearance events form a coherent high-risk cluster (near-dead-slow SOG, low steering gain, and predominantly port-side falls), indicating physically constrained maneuver effectiveness rather than numerical failure. Event counts and proportions for all three classes are reported in Table~\ref{tab:outcome_classes}.
+
+\begin{table}[H]
+\centering
+\fbox{\parbox{0.92\textwidth}{\textbf{TABLE PLACEHOLDER 5}\\Tabular content suppressed for plain-text review copy.}}\
+\caption{Outcome-class summary for eligible scenarios.}
+\label{tab:outcome_classes}
+\end{table}
+
+\subsection{Overall CW-MOB envelope}
+For clearance-after-entry events, the overall $\tau_{\mathrm{clear}}$ envelope is $P10=16.4$ s, $P50=63.1$ s, $P90=133.2$ s, and $P95=144.8$ s (Table~\ref{tab:main_percentiles}; see Figure~\ref{fig:tau_distribution} for the full distribution with percentile markers overlaid). The distribution therefore indicates a strongly spread operational range: some cases clear the stern-hazard zone within a relatively short interval, whereas others require substantially longer action duration before outward crossing occurs. This spread is consistent with the intended interpretation of the study variable. The quantity is not a single deterministic threshold valid for all transfer events; rather, it is an operational envelope whose upper percentiles represent more conservative initial-action guidance.
+
+For the paired heading trigger variable in clearance-after-entry events, $\psi_{\mathrm{clear}}$ percentiles are $P10=0.3648^{\circ}$, $P50=6.9835^{\circ}$, $P90=16.7785^{\circ}$, and $P95=18.7623^{\circ}$ (Table~\ref{tab:psi_percentiles}).
+These heading-change magnitudes are comparatively small, implying that heading change alone is a weaker bridge-level proxy for immediate protection than time-based guidance; in practice, $\tau_{\mathrm{clear}}$ is the more robust operational trigger.
+
+Side-wise nonzero envelopes are:
+\begin{itemize}
+    \item port: $n=2{,}590$, $P10=19.0$ s, $P50=83.0$ s, $P90=137.22$ s, $P95=147.51$ s;
+    \item starboard: $n=670$, $P10=11.8$ s, $P50=28.0$ s, $P90=49.8$ s, $P95=56.51$ s.
+\end{itemize}
+
+\subsection{Interpretation of side asymmetry}
+The side-stratified results show a pronounced asymmetry between port and starboard cases in the current baseline (see also Figure~\ref{fig:stratified_heatmap} for stratification by vessel class and size). Port-side cases exhibit much larger median and upper-percentile clearance times than starboard cases. Under the present sign convention, positive hard-over produces positive yaw and stern swing toward negative-$y$ (port in the body frame), so port-side casualties are more often in the stern-swing path while starboard-side casualties are more often protected by outward separation. This mechanism is consistent with the observed disposition split (port: 1{,}378 never-entered, 2{,}590 cleared-after-entry, 31 no-clear; starboard: 632 never-entered, 670 cleared-after-entry, 1 no-clear).
+
+\subsection{Operational use of percentile guidance}
+The main operational value lies in percentile-based support rather than point prediction. Lower percentiles represent optimistic or minimally sufficient action durations. Upper percentiles provide conservative guidance for CW-MOB initiation. A practical rule is to use $P50$ as a minimum hold-time reference under routine high-readiness conditions, and $P90$ as a conservative hold-time envelope when uncertainty is elevated (reduced maneuverability, uncertain side geometry, or degraded bridge response). Bridge teams should treat these values as bounded initial-action windows, not deterministic forecasts.
+
+\subsection{Sensitivity and model interpretation}
+The one-at-a-time sensitivity analysis (Figure~\ref{fig:sensitivity_tornado}) indicates that the median clearance time is most responsive to hazard-radius inflation, reduced steering gain, and increased response delay. Two bars in the tornado chart perturb the same variable---crew response delay ($t_{\mathrm{bridge}}$)---by $+10$~s and $+30$~s respectively, bracketing the fixed 4.5~s baseline assumption and quantifying how operational readiness margins change under less favourable crew reaction conditions.
+
+\subsection{Limitations of the prototype run}
+These results should be read together with four limitations. First, the right tail is partially horizon-censored at $t_{\max}=180$ s: 58 events clear in 160--180 s and 32 remain uncleared by 180 s, so upper-tail percentiles should be interpreted conservatively. Second, the baseline run does not benefit from matched maneuver-plan records and therefore uses a documented $35^{\circ}$ hard-over fallback for all events, combined with an IMO steering-gear benchmark proxy for rudder travel. Third, environmental forcing is only partially active: wind and wave are bridged for most eligible events, whereas current is unavailable in the executable baseline. Fourth, steering-gain floor concentration remains material across loading strata (2{,}432 of 5{,}302 events, 45.87\%, at or below $K\approx0.005$ including the loaded-like floor near $0.0045$), so floor/value sensitivity should be included in final calibration studies.
+
+\begin{table}[H]
+\centering
+\fbox{\parbox{0.92\textwidth}{\textbf{TABLE PLACEHOLDER 6}\\Tabular content suppressed for plain-text review copy.}}\
+\caption{Operational percentile summary (nonzero $\tau_{\mathrm{clear}
+\label{tab:main_percentiles}
+\end{table}
+
+\begin{table}[H]
+\centering
+\fbox{\parbox{0.92\textwidth}{\textbf{TABLE PLACEHOLDER 7}\\Tabular content suppressed for plain-text review copy.}}\
+\caption{Heading-at-clearance summary ($\psi_{\mathrm{clear}
+\label{tab:psi_percentiles}
+\end{table}
+
+Figure~\ref{fig:tau_distribution} shows the histogram of nonzero $\tau_{\mathrm{clear}}$ values for all clearance-after-entry events. The right-skewed shape reflects the spread described above: a concentration of events in the short-clearance regime alongside a substantial tail that requires extended action duration. Percentile markers link the distribution directly to the guidance thresholds.
+
+\begin{figure}[H]
+    \centering
+    \fbox{\parbox{0.92\textwidth}{\textbf{FIGURE PLACEHOLDER 4}\\Source file: Figure_4_tau_distribution.png\\Image suppressed for plain-text review copy.}}
+    \caption{Histogram of nonzero stern-clearance times ($\tau_{\mathrm{clear}
+    \label{fig:tau_distribution}
+\end{figure}
+
+Figure~\ref{fig:stratified_heatmap} presents median clearance times stratified by ship class, LOA bin, and transfer side. Cells with fewer than 30 eligible events are suppressed. The heatmap reveals the joint dependence of clearance time on vessel size and fall side, confirming that the overall percentile guidance should be read alongside ship class and LOA context when applied operationally.
+
+\begin{figure}[H]
+    \centering
+    \fbox{\parbox{0.92\textwidth}{\textbf{FIGURE PLACEHOLDER 5}\\Source file: Figure_5_stratified_heatmap.png\\Image suppressed for plain-text review copy.}}
+    \caption{Stratified median clearance time ($\tau_{\mathrm{clear}
+    \label{fig:stratified_heatmap}
+\end{figure}
+
+Figure~\ref{fig:sensitivity_tornado} ranks the seven perturbations by their absolute impact on the baseline P50 (63.1~s). Positive bars indicate that the perturbation increases clearance time, making the initial-action window more demanding. Two bars correspond to the same variable---crew response delay ($t_{\mathrm{bridge}}$)---perturbed by different amounts ($+10$~s and $+30$~s) to bracket the fixed 4.5~s high-readiness assumption.
+
+\begin{figure}[H]
+    \centering
+    \fbox{\parbox{0.92\textwidth}{\textbf{FIGURE PLACEHOLDER 6}\\Source file: Figure_6_sensitivity_tornado.png\\Image suppressed for plain-text review copy.}}
+    \caption{One-at-a-time sensitivity: shift in baseline P50 $\tau_{\mathrm{clear}
+    \label{fig:sensitivity_tornado}
+\end{figure}
+
+\section{Conclusion}
+This study develops a practical framework for quantifying the first emergency action in pilot-transfer MOB response, before full recovery-turn reconstruction. By formulating immediate protection as a stern-clearance problem, the paper defines a CW-MOB initial-action envelope through two trigger variables: clearance time, $\tau_{\mathrm{clear}}$, and heading change at clearance, $\psi_{\mathrm{clear}}$. This variable pair is the primary conceptual contribution.
+
+Within the current implementation, the executable results should be interpreted as a reproducible baseline rather than a fully calibrated estimate. The run uses operationally eligible accessible cases, applies an explicit hard-over fallback because maneuver-plan records do not align with the executable subset, adopts an IMO benchmark proxy for rudder travel, and activates wind-wave forcing for most cases while current remains unavailable. Even under these restrictions, the model yields a coherent percentile envelope and a strong side-dependent contrast.
+
+The next stage should strengthen event-level data fusion for maneuver and metocean variables and extend validation against additional operational cases. The present paper therefore provides a formal definition and first quantified operational envelope for the CW-MOB initial-action problem.
+
+\section*{CRediT authorship contribution statement}
+To be completed.
+
+\section*{Declaration of competing interest}
+The authors declare no known competing interests.
+
+\section*{Data availability}
+Data and code are available from the authors upon reasonable request, subject to operational data-sharing constraints.
+
+\section*{References}
+\begin{thebibliography}{00}
+\bibitem{ref_pilot_transfer_accidents}
+Sakar, C., Turan, O., Incecik, A., 2024.
+Dynamic analysis of pilot transfer accidents and associated safety recommendations.
+\emph{Ocean Engineering} 293, 116718.
+https://doi.org/10.1016/j.oceaneng.2023.116718
+
+\bibitem{ref_ship_motion_review}
+Zhang, L., Hong, Y., Wang, W., Wang, X., 2024.
+Ship motion prediction methods and applications: A comprehensive review.
+\emph{Journal of Marine Science and Engineering} 12(1), 107.
+https://doi.org/10.3390/jmse12010107
+
+\bibitem{ref_ship_motion_review2}
+Cademartori, C., Moniaci, W., Viviani, M., 2023.
+Review on ship motions and quiescent periods prediction methods.
+\emph{Applied Ocean Research} 141, 103783.
+https://doi.org/10.1016/j.apor.2023.103783
+
+\bibitem{ref_ais_review}
+Yang, Y., Li, Y., Liu, J., Zhang, Z., 2024.
+A review of automatic identification system trajectory data in maritime applications.
+\emph{Ocean Engineering} 306, 117995.
+https://doi.org/10.1016/j.oceaneng.2024.117995
+
+\bibitem{ref_aviation_alerts}
+Fercho, M., Casner, S.M., Geven, R., 2024.
+Pilots' response times and response strategies for resolving alerts in modern commercial aircraft.
+\emph{Human Factors} 66(1), 162--178.
+https://doi.org/10.1177/00187208221115396
+
+\bibitem{ref_aviation_hud}
+Zheng, Y., Wang, L., Hou, M., Pan, Z., 2024.
+Pilots' reactions to collision warnings on head-up displays.
+\emph{International Journal of Human-Computer Interaction} 40(9), 2595--2606.
+https://doi.org/10.1080/10447318.2023.2183943
+
+\bibitem{ref_aviation_envelope}
+Zhang, Q., Wang, Y., de Visser, C.C., Chu, Q., 2021.
+Database-driven safe flight-envelope protection for impaired aircraft.
+\emph{Journal of Guidance, Control, and Dynamics} 44(3), 570--589.
+https://doi.org/10.2514/1.G005519
+
+\bibitem{ref_land_aeb}
+Lai, F., Zhao, J., Zhang, S., 2024.
+An active emergency braking control method based on time-to-collision and steering collision risk.
+\emph{Machines} 12(1), 15.
+https://doi.org/10.3390/machines12010015
+
+\bibitem{ref_land_detection}
+Fukui, M., Hayama, R., Takeda, K., Yamada, K., 2024.
+The influence of pedestrian awareness of passenger cars on the driver's instinctive response timing in emergencies.
+\emph{Transportation Research Part F: Traffic Psychology and Behaviour} 109, 515--531.
+https://doi.org/10.1016/j.trf.2024.10.010
+
+\bibitem{ref_solas}
+IMO, 1974 (as amended).
+International Convention for the Safety of Life at Sea (SOLAS).
+International Maritime Organization, London.
+
+\bibitem{ref_iamsar}
+IMO and ICAO, 2022.
+International Aeronautical and Maritime Search and Rescue Manual (IAMSAR), Volume III: Mobile Facilities.
+International Maritime Organization, London.
+
+\bibitem{ref_fossen}
+Fossen, T.I., 2021.
+Handbook of Marine Craft Hydrodynamics and Motion Control, 2nd ed.
+Wiley, Chichester.
+\end{thebibliography}
+
+\end{document}

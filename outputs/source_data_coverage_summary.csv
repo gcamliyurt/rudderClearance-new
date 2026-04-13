@@ -1,0 +1,11 @@
+source_name,path,exists,n_rows
+6.0_exchange_points,/Users/gokhancamliyurt/Desktop/1. posDoc/6.0 meetingPoint/pilot_boat_analysis/exchange_points_cleaned.csv,True,527874
+6.1_proximity_events,/Users/gokhancamliyurt/Desktop/1. posDoc/6.1. shipDomain/pilot_boat_proximity_events.csv,True,17713
+6.1_assistance_sessions,/Users/gokhancamliyurt/Desktop/1. posDoc/6.1. shipDomain/pilot_boat_assistance_sessions.csv,True,133
+6.2_prototype_event_file,/Users/gokhancamliyurt/Desktop/1. posDoc/6.0 meetingPoint/6.4 pilotManuveringTrajectory/outputs/mob_analysis_all_events.csv,True,20255
+6.2_prototype_maneuver_file,/Users/gokhancamliyurt/Desktop/1. posDoc/6.0 meetingPoint/6.4 pilotManuveringTrajectory/outputs/maneuver_plan_per_event.csv,True,4
+6.2_eligible_event_subset,/Users/gokhancamliyurt/Desktop/1. posDoc/6.0 meetingPoint/6.4 pilotManuveringTrajectory/outputs/mob_analysis_all_events.csv,True,5302
+6.0_metocean_bridge_to_6.2_eligible,/Users/gokhancamliyurt/Desktop/1. posDoc/6.0 meetingPoint/6.4 pilotManuveringTrajectory/outputs/mob_analysis_all_events.csv,True,5299
+6.0_event_context_bridge_to_6.2_eligible,/Users/gokhancamliyurt/Desktop/1. posDoc/6.0 meetingPoint/6.4 pilotManuveringTrajectory/outputs/mob_analysis_all_events.csv,True,1558
+6.1_overlap_with_6.2_eligible_within_10min,/Users/gokhancamliyurt/Desktop/1. posDoc/6.1. shipDomain/pilot_boat_proximity_events.csv,True,2
+6.1_session_overlap_with_6.2_eligible,/Users/gokhancamliyurt/Desktop/1. posDoc/6.1. shipDomain/pilot_boat_assistance_sessions.csv,True,0
